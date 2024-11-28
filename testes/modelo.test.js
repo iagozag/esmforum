@@ -23,3 +23,43 @@ test('Testando cadastro de três perguntas', () => {
   expect(perguntas[2].num_respostas).toBe(0);
   expect(perguntas[1].id_pergunta).toBe(perguntas[2].id_pergunta-1);
 });
+
+test('Testando cadastro de resposta', () => {
+  const id_pergunta = modelo.cadastrar_pergunta('Quanto é 2 + 2?');
+  const id_resposta = modelo.cadastrar_resposta(id_pergunta, '4');
+  const respostas = modelo.get_respostas(id_pergunta);
+
+  expect(respostas.length).toBe(1);
+  expect(respostas[0].id_resposta).toBe(id_resposta);
+  expect(respostas[0].texto).toBe('4');
+});
+
+test('Testando obter pergunta específica', () => {
+  const id_pergunta = modelo.cadastrar_pergunta('Qual é a capital da França?');
+  const pergunta = modelo.get_pergunta(id_pergunta);
+
+  expect(pergunta.id_pergunta).toBe(id_pergunta);
+  expect(pergunta.texto).toBe('Qual é a capital da França?');
+});
+
+test('Testando obter respostas de uma pergunta', () => {
+  const id_pergunta = modelo.cadastrar_pergunta('Quanto é 5 + 5?');
+  modelo.cadastrar_resposta(id_pergunta, '10');
+  modelo.cadastrar_resposta(id_pergunta, 'Dez');
+  
+  const respostas = modelo.get_respostas(id_pergunta);
+  expect(respostas.length).toBe(2);
+  expect(respostas[0].texto).toBe('10');
+  expect(respostas[1].texto).toBe('Dez');
+});
+
+test('Testando número de respostas', () => {
+  const id_pergunta = modelo.cadastrar_pergunta('Quanto é 3 + 3?');
+  expect(modelo.get_num_respostas(id_pergunta)).toBe(0);
+
+  modelo.cadastrar_resposta(id_pergunta, '6');
+  expect(modelo.get_num_respostas(id_pergunta)).toBe(1);
+
+  modelo.cadastrar_resposta(id_pergunta, 'Seis');
+  expect(modelo.get_num_respostas(id_pergunta)).toBe(2);
+});
